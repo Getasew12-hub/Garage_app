@@ -17,18 +17,19 @@ env.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Connect to the database
-connectDB();
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin:"https://familygarage.vercel.app",
-  credentials: true
-}))
-
+    origin:process.env.NODE_ENV==="development" ? 'http://localhost:3000' :process.env.PRODUCTION_URL,
+    credentials:true,
+}));
+// Connect to the database
+connectDB();
 // Routes
  app.get("/",(req,res)=>{
     res.send("API is running....");
@@ -39,7 +40,7 @@ app.use("/api/appointment", protectRoute, appointmentRouter);
 app.use("/api/service-job", serviceJobRouter);
 app.use("/api/admin",adminProtectRoute, adminRouter);
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 export default app;
