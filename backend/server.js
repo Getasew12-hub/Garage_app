@@ -36,7 +36,7 @@ app.use("/api/appointment", protectRoute, appointmentRouter);
 app.use("/api/service-job", serviceJobRouter);
 app.use("/api/admin",adminProtectRoute, adminRouter);
 
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+export default app;
