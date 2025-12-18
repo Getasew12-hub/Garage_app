@@ -9,6 +9,7 @@ import authRouter from "./routers/auth.router.js";
 import appointmentRouter from "./routers/appointment.router.js";
 import serviceJobRouter from "./routers/servicejob.router.js";
 import adminRouter from "./routers/admin.router.js";
+import cors from "cors";
 
 env.config();
 
@@ -22,6 +23,11 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(cors({
+  origin:process.env.NODE_ENV === "development" ? "http://localhost:5173" : process.env.PRODUCTION_URL,
+  credentials: true
+}))
 
 // Routes
 app.use("/api/auth", authRouter);
