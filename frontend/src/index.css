@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+body{
+    background: rgb(35, 44, 52);
+    color: white;
+}
+.backgroundDiv{
+    background: rgb(18, 25, 31);
+    
+}
+.shadowiner::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to right,rgb(13, 13, 13)  ,transparent 70%);
+    
+}
+.addiminButton{
+    @apply px-2.5 lg:px-10 xl:px-20 py-2 hover:bg-blue-300 w-full text-start;
+}
+@media (max-width:600px) {
+    .shadowiner::after{
+        background: linear-gradient(to right,rgb(13, 13, 13)  ,transparent 40%);
+    }
+}
+
+.surviceTestomon{
+    @apply p-3 rounded-md flex justify-center items-center flex-col gap-5 text-center;
+}
+.appointmentdiv{
+    @apply flex gap-2  flex-col w-full ;
+}
+.appointmentinput{
+    @apply border border-gray-400 rounded py-2 px-3 w-full;
+}
+@layer base {
+  select option {
+    /* Use a specific hex code or a color variable */
+    background-color: white; /* Default background */
+    color: black; /* Default text color */
+  }
+  select option:hover,
+  select option:checked {
+    background-color: #3b82f6; /* Tailwind blue-500 equivalent for hover/checked */
+    color: white;
+  }
+}
