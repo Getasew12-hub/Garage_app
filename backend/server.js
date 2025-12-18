@@ -30,6 +30,9 @@ app.use(cors({
 }))
 
 // Routes
+ app.get("/",(req,res)=>{
+    res.send("API is running....");
+ });
 app.use("/api/auth", authRouter);
 app.use("/api/vehicle",protectRoute, vehicleRouter);
 app.use("/api/appointment", protectRoute, appointmentRouter);
