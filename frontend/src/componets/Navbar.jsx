@@ -14,6 +14,7 @@ function Navbar({setOpenAdminMenu,showLogin}) {
     
     const admin=user?.role==="admin";
     const customer=user?.role==="customer";
+    const mechanic=user?.role==="mechanic";
     const location=useLocation()
     const addminPath=location.pathname.startsWith("/admin")
 
@@ -55,6 +56,7 @@ function Navbar({setOpenAdminMenu,showLogin}) {
             <Link to="/service" className='mr-4 hover:text-blue-400'>Service</Link>
             <Link to="/aboutus" className='mr-4 hover:text-blue-400'>About us</Link>
             <Link to="/contact" className='mr-4 hover:text-blue-400'>Contact</Link>
+          {mechanic &&   <Link to="/mechanic" className='mr-4 hover:text-blue-400'>My Work</Link>}
            {customer && <Link to="/appointment" className='mr-4 hover:text-blue-400'>Appointment</Link>}
            {admin && <Link to="/admin?path=dashboard" className='mr-4 hover:text-blue-400'>Dashboard</Link>
            } 
@@ -74,6 +76,7 @@ function Navbar({setOpenAdminMenu,showLogin}) {
             <Link to="/service" className='mr-4 hover:text-blue-400 w-fit' onClick={handleMenu}>Service</Link>
             <Link to="/aboutus" className='mr-4 hover:text-blue-400 w-fit' onClick={handleMenu}>About us</Link>
             <Link to="/contact" className='mr-4 hover:text-blue-400 w-fit' onClick={handleMenu}>Contact</Link>
+           {mechanic && <Link to="/mechanic" className='mr-4 hover:text-blue-400 w-fit' onClick={handleMenu}>My Work</Link>}
              {customer && <Link to="/appointment" className='mr-4 hover:text-blue-400' onClick={handleMenu}>Appointment</Link>}
            {admin && <Link to="/admin?path=dashboard" className='mr-4 hover:text-blue-400 w-fit' onClick={handleMenu}>Dashboard</Link>
            } 

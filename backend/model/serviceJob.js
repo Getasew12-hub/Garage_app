@@ -23,10 +23,7 @@ const serviceJobSchema=mongoose.Schema({
         default:"in-progress",
         enum:["in-progress","completed","cancelled"],
     },
-     appointmentDate:{
-        type:Date,
-        required:true,
-    }
+   
 },{timestamps:true
 });
 

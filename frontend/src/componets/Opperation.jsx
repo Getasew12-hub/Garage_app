@@ -1,7 +1,7 @@
 import React from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-function Opperation({recentAppontment}) {
+function Opperation({recentAppontment,operationOverview=[]}) {
 
  const data = [
   { name: 'Jan', Repairs: 120, revenue: 450 },
@@ -14,6 +14,7 @@ function Opperation({recentAppontment}) {
   { name: 'Apr', Repairs: 220, revenue: 480 },
   // ... more months
 ];
+console.log(operationOverview);
   return (
     <div className='mt-20 space-y-25 '>
 
@@ -22,9 +23,9 @@ function Opperation({recentAppontment}) {
         <h2 className='font-bold md:text-2xl text-xl mb-3'>Daily Operation overview</h2>
         <div>
    <LineChart
-      style={{ width: '100%', maxWidth:"700px", height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
+      style={{ width: '100%', maxWidth:"100%", height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
       responsive
-      data={data}
+      data={operationOverview}
       margin={{
         top: 5,
         right: 0,
@@ -34,13 +35,13 @@ function Opperation({recentAppontment}) {
     >
       <CartesianGrid strokeDasharray="3 3" />
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey="name" stroke='white'/>
-         <YAxis yAxisId={"left"} dataKey="revenue" stroke='white'/>
-         <YAxis  yAxisId={"right"} orientation='right' dataKey="Repairs" stroke='white'/>
+        <XAxis dataKey="day" stroke='white'/>
+         <YAxis yAxisId={"left"} dataKey="total_Appontment" stroke='white'/>
+         <YAxis  yAxisId={"right"} orientation='right' dataKey="total_service" stroke='white'/>
          <Tooltip/>
       <Legend />
-      <Line type="monotone" dataKey="Repairs" stroke="#8884d8" activeDot={{ r: 8 }} />
-      <Line type="monotone" dataKey="revenue" stroke="#82ca9d" />
+      <Line type="monotone" dataKey="total_service" stroke="#8884d8" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="total_Appontment" stroke="#82ca9d" />
     </LineChart>
     </div>
         </div>

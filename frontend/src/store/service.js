@@ -44,6 +44,20 @@ const serviceStore = create((set, get) => ({
         set({ loading: false });
       }
    },
+   GetMechanicsWork:async() => {
+      set({ loading: true });
+      try {
+         const response=await axios.get("/service-job/getMechanicServiceJobs");
+         set({ userAppointment: response.data.serviceJobs });
+         
+      } catch (error) {
+         console.error("Login error:", error);
+         set({ userAppointment: [] });
+         
+      }finally{
+        set({ loading: false });
+      }
+   },
    SetAppointment:async (vehicleId,val) => {
    
          if(!validateData(val)){

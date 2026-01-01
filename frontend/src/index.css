@@ -8,6 +8,20 @@ body{
     background: rgb(18, 25, 31);
     
 }
+.overflowScroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .overflowScroll::-webkit-scrollbar-track {
+    background: #1e293b; 
+  }
+  
+  .overflowScroll::-webkit-scrollbar-thumb {
+    background-color: #475569; 
+    border-radius: 20px; 
+    border: 3px solid #1e293b; 
+  }
 .shadowiner::after{
     content: "";
     position: absolute;

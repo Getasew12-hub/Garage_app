@@ -11,31 +11,73 @@ export const getDashboardController=async (req,res) => {
         const totalCompletedAppontment=await Appointment.countDocuments({status:"completed"});
 
         const recentAppontment=await Appointment.find().sort({createdAt:-1}).limit(5).populate("vehicleId");
-         const workRotine=await ServiceJob.aggregate([
-            {
-                $match:{status:"completed"}
-            },
-            {
-                $lookup:{
-                    from:"appointments",
-                    localField:"appointmentId",
-                    foreignField:"_id",
-                    as:"appointment"
+     
+    const today = new Date();
+    
+       const sevenDaysBefore = new Date(today);
+       sevenDaysBefore.setDate(today.getDate() - 7);
+
+    const  Today=today.toISOString().split('T')[0];
+    const Endday=sevenDaysBefore.toISOString().split('T')[0]
+        const alldays= sevendays(sevenDaysBefore,today);
+     
+       
+
+   
+            const total_Appontment=await Appointment.aggregate([
+             {
+                $match:{
+                    createdAt:{$lte:new Date(Today),$gte:new Date(Endday)}
                 }
-            },
-            {
+             },
+             {
                 $group:{
-                    _id:"$appointmentDate",
-                    count:{$sum:1}
+                    _id:{$dateToString:{format:"%Y-%m-%d",date:"$createdAt"}},
+                    totalAppontment:{$sum:1},
                 }
-            }
+             },
+             {
+                $project:{
+                    _id:0,
+                    createdAt:"$_id",
+                    totalAppontment:1
+                }
+             }
+            ])
 
+            const total_service=await ServiceJob.aggregate([
+             {
+                $match:{
+                    createdAt:{$lte:new Date(Today),$gte:new Date(Endday)}
+                }
+             },
+             {
+                $group:{
+                    _id:{$dateToString:{format:"%Y-%m-%d",date:"$createdAt"}},
+                    total_service:{$sum:1},
+                }
+             },
+             {
+                $project:{
+                    _id:0,
+                    createdAt:"$_id",
+                    total_service:1
+                }
+             }
+            ])
 
+  
+        const filterdata=alldays.map((day)=>{
+          const totalAppontment = total_Appontment.find(item=>item.createdAt===day);
+          const totalservice = total_service.find(item=>item.createdAt===day);
 
-         ])
+          return {day:day,total_Appontment:totalAppontment?.totalAppontment||0,total_service:totalservice?.total_service||0};
 
-        
-        return res.status(200).json({success:true,totalVicles,toataCustomer,totalAppontment,totalPendingAppontment,totalCompletedAppontment,recentAppontment});
+        })
+       const operationOverview=await Promise.all(filterdata);
+     
+
+        return res.status(200).json({success:true,totalVicles,toataCustomer,totalAppontment,totalPendingAppontment,totalCompletedAppontment,recentAppontment,operationOverview});
 
         
     } catch (error) {
@@ -326,4 +368,16 @@ export const deleteUserController=async (req,res) => {
         
     }
     
+}
+
+
+
+
+function sevendays(start,end){
+    const dates=[];
+   while(start<=end){
+    dates.push(start.toISOString().split("T")[0]);
+    start.setDate(start.getDate()+1);
+   }
+   return dates;
 }

@@ -10,7 +10,7 @@ function Dashboard() {
   },[])
 
    if (loading) return <div className='flex justify-center items-center h-screen '><Loader  size={45} className='animate-spin'/></div>;
-
+console.log(dashbordData?.operationOverview)
   return (
     <div className='space-y-4'>
       <h1 className='font-bold tracking-wider sm:text-2xl text-xl '>Owner Dashboard</h1>
@@ -41,7 +41,7 @@ Total Appontment</p>
       </div>
 
       <div>
-        <Opperation recentAppontment={dashbordData?.recentAppontment}/>
+        <Opperation recentAppontment={dashbordData?.recentAppontment} operationOverview={dashbordData?.operationOverview}/>
       </div>
 
     </div>
