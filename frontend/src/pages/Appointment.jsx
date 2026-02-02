@@ -41,7 +41,7 @@ function Appointment() {
                 <p>Service Type : <span className='font-semibold tracking-wider'>{item.servicetype}</span> </p>
                 <div className='flex  items-center gap-3 flex-wrap'>
 
-                  <span>status:</span><p className={`flex gap-1.5 ${item.status == "in-progress" && "bg-yellow-500/30 text-yellow-500"} ${item.status == "completed" && "bg-green-500/30 text-green-500"} ${item.status == "canceled" && "bg-red-500/30 text-red-500"}  ${item.status == "booked" && "bg-blue-500/30 text-blue-500"} rounded py-1 px-2  h-fit `}>{item.status}</p>
+                  <span>status:</span><p className={`flex gap-1.5 h-fit ${item.status == "in-progress" && "bg-yellow-500/30 text-yellow-500"} ${item.status == "completed" && "bg-green-500/30 text-green-500"} ${item.status == "canceled" && "bg-red-500/30 text-red-500"}  ${item.status == "booked" && "bg-blue-500/30 text-blue-500"} rounded py-1 px-2  h-fit `}>{item.status}</p>
                 </div>
                 {item?.status == "booked" && <button onClick={() => {
                   console.log("updating appointment",item);
@@ -73,7 +73,7 @@ function Appointment() {
                     <button onClick={() => {
                       setShowAddCarform(item);
                       SetShowUpdate(false);
-                    }} className='flex gap-1.5 bg-blue-500 rounded py-1 px-2 cursor-pointer'>Book <ArrowRight /></button>
+                    }} className='flex gap-1.5 bg-blue-500 rounded py-1 px-2 cursor-pointer h-fit'>Book <ArrowRight /></button>
 
                     <button onClick={() => RemoveCars(item._id)} ><Trash2 color='red' className='cursor-pointer ml-6' /></button>
                   </div>
