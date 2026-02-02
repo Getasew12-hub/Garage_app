@@ -17,7 +17,6 @@ function Login({ showLogin }) {
 
   function handleForm(e) {
     e.preventDefault();
-  
 
     if (stateform == "login") {
       LoginUser(loginform);
@@ -72,29 +71,33 @@ function Login({ showLogin }) {
             }
           />
 
-       {stateform == "signup" &&  <input
-            type="text"
-            name="phone"
-            id="phone"
-            className="w-full bg-transparent border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
-            placeholder="09876...."
-            pattern="[0-9]*"
-            maxLength={10}
-            onChange={(e) =>
-              setLogingform({ ...loginform, phone: e.target.value })
-            }
-          />}
+          {stateform == "signup" && (
+            <input
+              type="text"
+              name="phone"
+              id="phone"
+              className="w-full bg-transparent border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
+              placeholder="09876...."
+              pattern="[0-9]*"
+              maxLength={10}
+              onChange={(e) =>
+                setLogingform({ ...loginform, phone: e.target.value })
+              }
+            />
+          )}
 
-        {stateform == "signup" &&  <input
-            type="text"
-            name="address"
-            id="address"
-            className="w-full bg-transparent border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
-            placeholder="Enter your address"
-            onChange={(e) =>
-              setLogingform({ ...loginform, address: e.target.value })
-            }
-          />}
+          {stateform == "signup" && (
+            <input
+              type="text"
+              name="address"
+              id="address"
+              className="w-full bg-transparent border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
+              placeholder="Enter your address"
+              onChange={(e) =>
+                setLogingform({ ...loginform, address: e.target.value })
+              }
+            />
+          )}
 
           <button
             type="submit"
@@ -102,8 +105,13 @@ function Login({ showLogin }) {
             disabled={loading}
             onClick={handleForm}
           >
-           {loading ?<Loader size={20} className="animate-spin" /> :  stateform == "login"
-            ? "Log in" : "Sign up"}
+            {loading ? (
+              <Loader size={20} className="animate-spin" />
+            ) : stateform == "login" ? (
+              "Log in"
+            ) : (
+              "Sign up"
+            )}
           </button>
         </form>
         <p className="text-center mt-4 ">

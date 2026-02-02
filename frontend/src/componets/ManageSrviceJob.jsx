@@ -6,27 +6,24 @@ import toast from "react-hot-toast";
 import Search from "./Search";
 
 function ManageSrviceJob() {
-  
   const {
     AppointmetData,
     loading,
     GetServiceJobs,
     DeleteServiceJob,
     smalLoad,
-    UpdateSeriveStatus
+    UpdateSeriveStatus,
   } = addminStore();
 
-  
   const [show, setShow] = React.useState(null);
-  const [services,setServices]=React.useState();
+  const [services, setServices] = React.useState();
 
   useEffect(() => {
     GetServiceJobs();
   }, []);
-  useEffect(()=>{
-    
-    setServices(AppointmetData)
-  },[AppointmetData])
+  useEffect(() => {
+    setServices(AppointmetData);
+  }, [AppointmetData]);
 
   if (loading || !services)
     return (
@@ -40,7 +37,6 @@ function ManageSrviceJob() {
   }
 
   function DeleteItem(id, status) {
-    console.log("the status is ", status);
     if (status !== "completed") {
       toast.error("You can't delete this item");
       return;
@@ -48,18 +44,17 @@ function ManageSrviceJob() {
 
     DeleteServiceJob(id);
   }
-function searchResult(result){
-  setServices(result);
-}
+  function searchResult(result) {
+    setServices(result);
+  }
   return (
     <div>
       <div className="flex justify-between">
+        <h2 className="font-bold md:text-2xl text-xl mb-3 ">
+          Manage Service Job
+        </h2>
 
-      <h2 className="font-bold md:text-2xl text-xl mb-3 ">
-        Manage Service Job
-      </h2>
-
-      <Search data={AppointmetData} searchResult={searchResult}/>
+        <Search data={AppointmetData} searchResult={searchResult} />
       </div>
 
       {services?.length > 0 && (
@@ -91,7 +86,11 @@ function searchResult(result){
                   </td>
 
                   <td className=" p-2.5">{val.appointment?.servicetype}</td>
-                  <td className={` p-2.5 max-md:hidden  ${val?.appointment?.status === "in-progress" && "text-yellow-500"} ${val?.appointment?.status === "completed" && "text-green-500" } ${val?.appointment?.status === "canceled" && "text-red-500" }`}>{val?.appointment?.status}</td>
+                  <td
+                    className={` p-2.5 max-md:hidden  ${val?.appointment?.status === "in-progress" && "text-yellow-500"} ${val?.appointment?.status === "completed" && "text-green-500"} ${val?.appointment?.status === "canceled" && "text-red-500"}`}
+                  >
+                    {val?.appointment?.status}
+                  </td>
                   <td className=" p-2.5">
                     <button
                       onClick={() => setShow(index)}
@@ -111,15 +110,21 @@ function searchResult(result){
                   <td className=" p-2.5">
                     <div className="flex items-center gap-4">
                       <button
-                        onClick={() => DeleteItem(val._id, val.appointment
-?.status)}
+                        onClick={() =>
+                          DeleteItem(val._id, val.appointment?.status)
+                        }
                         className="cursor-pointer"
                       >
-                        {smalLoad ? <Loader size={18} /> : <Trash2 size={18} color="red" />}
-                        
+                        {smalLoad ? (
+                          <Loader size={18} />
+                        ) : (
+                          <Trash2 size={18} color="red" />
+                        )}
                       </button>
                       <select
-                      onChange={(e)=>UpdateSeriveStatus(val._id,e.target.value)}
+                        onChange={(e) =>
+                          UpdateSeriveStatus(val._id, e.target.value)
+                        }
                         name="action"
                         className="border border-gray-500 py-1 px-2 rounded text-[10px] cursor-pointer"
                         defaultValue={val?.appointment?.status}
