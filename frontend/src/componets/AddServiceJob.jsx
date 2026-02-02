@@ -26,7 +26,7 @@ function AddServiceJob() {
   function searchResult(result) {
     setServices(result);
   }
-console.log(services);
+
   return (
     <div>
       <div className="flex justify-between">
