@@ -20,14 +20,14 @@ export const getDashboardController=async (req,res) => {
     const  Today=today.toISOString().split('T')[0];
     const Endday=sevenDaysBefore.toISOString().split('T')[0]
         const alldays= sevendays(sevenDaysBefore,today);
-     
-       
-
    
+      const tommorow=new Date();
+      tommorow.setDate(today.getDate()+1);
+       
             const total_Appontment=await Appointment.aggregate([
              {
                 $match:{
-                    createdAt:{$lte:new Date(Today),$gte:new Date(Endday)}
+                    createdAt:{$lt:new Date(tommorow),$gte:new Date(Endday)}
                 }
              },
              {
@@ -48,7 +48,7 @@ export const getDashboardController=async (req,res) => {
             const total_service=await ServiceJob.aggregate([
              {
                 $match:{
-                    createdAt:{$lte:new Date(Today),$gte:new Date(Endday)}
+                    createdAt:{$lt:new Date(tommorow),$gte:new Date(Endday)}
                 }
              },
              {
@@ -91,6 +91,7 @@ export const getDashboardController=async (req,res) => {
 
 
 export const getServiceJobsController=async(req,res)=>{
+    
       
     try {
         const serviceJobs=await ServiceJob.aggregate([
@@ -118,7 +119,7 @@ export const getServiceJobsController=async(req,res)=>{
                 $unwind:"$vehicle"
             }
         ])
-       
+     
         return res.status(200).json({success:true,serviceJobs});
     } catch (error) {
         console.log("Error in getServiceJobs controller ",error.message);
@@ -232,7 +233,11 @@ export const getAppointemetCarsController=async (req,res) => {
 
             {
                 $match:{status:"booked"}
-            },{
+            },
+            {
+                $sort:{createdAt:-1}
+            }
+            ,{
                 $lookup:{
                     from:"vehicles",
                     localField:"vehicleId",

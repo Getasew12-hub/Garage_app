@@ -1,3 +1,4 @@
+import Appointment from "../model/appointment.js";
 import Vehicle from "../model/vehicle.js";
 
 
@@ -65,9 +66,12 @@ export const updateVehicleController=async(req,res)=>{
 
 export const deleteVehicleController=async(req,res)=>{
     try {
+        console.log("delete vehicle controller called");
         const userId=req.user._id;
         const vehicleId=req.params.vehicleId;
-          
+          const checkAppointment=await Appointment.find({vehicleId,status:{$ne:"completed"}})
+
+          if(checkAppointment.length>0) return res.status(404).json({success:false,message:"You can not delete the car"});
         await Vehicle.findByIdAndDelete(vehicleId);
 
         return res.status(200).json({success:true,message:"Vehicle deleted successfully"});

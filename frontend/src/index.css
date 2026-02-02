@@ -3,6 +3,7 @@
 body{
     background: rgb(35, 44, 52);
     color: white;
+    
 }
 .backgroundDiv{
     background: rgb(18, 25, 31);
@@ -14,6 +15,14 @@ body{
   }
   
   .overflowScroll::-webkit-scrollbar-track {
+    background: #1e293b; 
+  }
+.overlowremove::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .overlowremove::-webkit-scrollbar-track {
     background: #1e293b; 
   }
   

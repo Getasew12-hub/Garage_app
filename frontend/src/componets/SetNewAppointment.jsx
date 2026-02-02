@@ -4,18 +4,19 @@ import serviceStore from '../store/service';
 import {Loader} from 'lucide-react';
 import toast from 'react-hot-toast';
 
-function SetNewAppointment({formdata=null,setShowAppointmentform}) {
-    const {formLoading,SetAppointment,TimeSlot}=serviceStore();
+function SetNewAppointment({formdata=null,setShowAppointmentform,update=false}) {
+    console.log("form data lloook",formdata);
+    const {formLoading,SetAppointment,TimeSlot,UpdateAppointment}=serviceStore();
     const [slots,setSlots]=React.useState([]);
     const [appointment,setAppointment]=React.useState({
         
-        appointmentDate:"",
-        timeslot:"",
-        servicetype:"oil change",
-        fullTimeSlot:"",
-        model:formdata?.model ||"",
-        year:formdata?.year || "",
-        VIN:formdata?.VIN || "",
+        appointmentDate: formdata?.appointmentDate|| "",
+        timeslot:formdata?.timeslot || "",
+        servicetype:formdata?.servicetype || "oil change",
+        fullTimeSlot:formdata?.fullTimeSlot || "",
+        model:formdata?.model || formdata?.vehicleId?.model || "",
+        year:formdata?.year ||formdata?.vehicleId?.year || "",
+        VIN:formdata?.VIN || formdata?.vehicleId?.VIN || "",
     });
 
     useEffect(()=>{
@@ -23,11 +24,13 @@ function SetNewAppointment({formdata=null,setShowAppointmentform}) {
             
             if(appointment.appointmentDate && appointment.servicetype){
                
-                   
+                
                   const response=  await TimeSlot(appointment.appointmentDate,appointment.servicetype);
                     
                     setSlots(response.availableSlots.slice(0,4));
+                    if(!appointment.timeslot){
                     setAppointment({...appointment,timeslot:response.availableSlots[0]?.displayTime,fullTimeSlot:response.availableSlots[0]?.startTime});
+            }
               
             }
         }
@@ -48,10 +51,17 @@ function SetNewAppointment({formdata=null,setShowAppointmentform}) {
 
     async function handleForm(e){
         e.preventDefault();
-   
+     if(update){
+        toast.success(formdata?._id);
+      
+      const response=await  UpdateAppointment(formdata?._id,appointment);
+        response==="true" &&  setShowAppointmentform(false);
+    
+     }else{
       const response=await  SetAppointment(formdata?._id, appointment);
      
      response==="true" &&  setShowAppointmentform(false);
+     }
     }
 
   return (
@@ -59,14 +69,14 @@ function SetNewAppointment({formdata=null,setShowAppointmentform}) {
 
         <fieldset className='border border-gray-400 rounded p-4'>
       
-      <legend className='sm:text-xl text-md font-bold text-center '>Set New Appointment</legend>
+      <legend className='sm:text-xl text-md font-bold text-center '>{update?"Update Appointment":"New Appointment"}</legend>
 
         <form onSubmit={handleForm} className='space-y-5'>
             <div className='flex justify-between gap-3 max-sm:flex-col'>
            
             <div className='appointmentdiv'>
                 <label htmlFor="appointmentDate" >Appointment Date</label>
-                <input type="date" min={new Date().toISOString().split('T')[0]}  id="appointmentDate" name='appointmentDate' onChange={handleInput} className='appointmentinput' value={appointment.appointmentDate} onClick={(e)=> e.target.showPicker()}/>
+                <input type="date" min={new Date().toISOString().split('T')[0]} form='yyy-mm-dd'  id="appointmentDate" name='appointmentDate' onChange={handleInput} className='appointmentinput' value={appointment.appointmentDate && new Date(appointment.appointmentDate).toISOString().split("T")[0]} onClick={(e)=> e.target.showPicker()}/>
             </div>
                <div className='appointmentdiv'>
                 <label htmlFor="servicetype">Service Type</label>
@@ -87,7 +97,7 @@ function SetNewAppointment({formdata=null,setShowAppointmentform}) {
             
             <div className='appointmentdiv'>
                 <label htmlFor="timeslot">Time Slot</label>
-                <select name="timeslot" id="timeslot" onChange={handleInput} className='appointmentinput' value={appointment.timeslot}>
+                <select name="timeslot" id="timeslot" onChange={handleInput} className='appointmentinput'  value={appointment.timeslot}>
                     {slots.map((slot,index)=><option key={index} value={slot.displayTime}>{slot.displayTime}</option>)}
                 </select>
             </div>
@@ -95,19 +105,19 @@ function SetNewAppointment({formdata=null,setShowAppointmentform}) {
           
             <div className='appointmentdiv'>
                 <label htmlFor="model">Model</label>
-                <input type="text" id="model" name='model' onChange={handleInput} className='appointmentinput' value={appointment.model}/>
+                <input type="text" id="model" name='model' onChange={handleInput} className='appointmentinput' value={appointment.model} readOnly={update || formdata?.model }/>
             </div>
             <div className='appointmentdiv'>
                 <label htmlFor="year">Year</label>
-                <input type="text" id="year" name='year' onChange={handleInput} className='appointmentinput' value={appointment.year}/>
+                <input type="text" id="year" name='year' onChange={handleInput} className='appointmentinput' value={appointment.year} readOnly={update || formdata?.year }/>
             </div>
        </div>
 
             <div className='appointmentdiv'>
                 <label htmlFor="VIN">VIN</label>
-                <input type="text" id="VIN" name='VIN' onChange={handleInput} className='appointmentinput' value={appointment.VIN}/>
+                <input type="text" id="VIN" name='VIN' onChange={handleInput} className='appointmentinput' value={appointment.VIN} readOnly={update || formdata?.VIN}/>
             </div>
-            <button disabled={formLoading} type='submit' className={`${formLoading ? "cursor-not-allowed bg-green-400/50 " : "bg-green-400 "} py-2 px-3 rounded text-sm w-full cursor-pointer font-bold flex justify-center items-center`}>{formLoading ? <Loader size={18}/> : "Booking"} </button>
+            <button disabled={formLoading} type='submit' className={`${formLoading ? "cursor-not-allowed bg-green-400/50 " : "bg-green-400 "} py-2 px-3 rounded text-sm w-full cursor-pointer font-bold flex justify-center items-center`}>{formLoading ? <Loader size={18}/> :(update ? "Update" : "Booking")} </button>
         </form>
 
         </fieldset>

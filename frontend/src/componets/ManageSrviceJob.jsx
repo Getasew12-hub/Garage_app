@@ -39,6 +39,8 @@ function ManageSrviceJob() {
 
     DeleteServiceJob(id);
   }
+
+console.log("servieses ",AppointmetData)
   return (
     <div>
       <h2 className="font-bold md:text-2xl text-xl mb-3 ">
@@ -74,7 +76,7 @@ function ManageSrviceJob() {
                   </td>
 
                   <td className=" p-2.5">{val.appointment?.servicetype}</td>
-                  <td className={` p-2.5 max-md:hidden  ${val.status === "in-progress" && "text-yellow-500"} ${val.status === "completed" && "text-green-500" } ${val?.status === "cancled" && "text-red-500" }`}>{val.status}</td>
+                  <td className={` p-2.5 max-md:hidden  ${val?.appointment?.status === "in-progress" && "text-yellow-500"} ${val?.appointment?.status === "completed" && "text-green-500" } ${val?.appointment?.status === "canceled" && "text-red-500" }`}>{val?.appointment?.status}</td>
                   <td className=" p-2.5">
                     <button
                       onClick={() => setShow(index)}
@@ -104,10 +106,10 @@ function ManageSrviceJob() {
                       onChange={(e)=>UpdateSeriveStatus(val._id,e.target.value)}
                         name="action"
                         className="border border-gray-500 py-1 px-2 rounded text-[10px] cursor-pointer"
-                        defaultValue={val.status}
+                        defaultValue={val?.appointment?.status}
                       >
                         <option value="in-progress">In-progress</option>
-                        <option value="cancled">Cancled</option>
+                        <option value="canceled">Canceled</option>
                         <option value="completed">Completed</option>
                       </select>
                     </div>

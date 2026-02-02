@@ -145,7 +145,7 @@ function filterSlotsByBookings(potentialSlots, bookedJobs) {
 export const getUserAppointmentsController=async(req,res)=>{
      try{
         const userId=req.user._id;
-        const appointments=await Appointment.find({userId}).populate("vehicleId").sort({createdAt:-1});
+        const appointments=await Appointment.find({userId,hideFromUser:false}).populate("vehicleId").sort({createdAt:-1});
         return res.status(200).json({success:true,appointments});
      }
      catch(error){
@@ -167,13 +167,19 @@ export const addAppointmentController=async(req,res)=>{
     
         
        if(vehicleId){
+        
+        const checkAppointment=await Appointment.find({vehicleId,status:{$ne:"completed"}});
+        
+        if(checkAppointment.length>0){
+            return res.status(404).json({success:false,message:"Car already appointment"})
+        }
            const newAppointment=await Appointment.create({userId,vehicleId,appointmentDate,timeslot,servicetype,fullTimeSlot});
-           return res.status(200).json({success:true,newAppointment});
+           const appointments=await Appointment.findOne({userId,_id:newAppointment._id}).populate("vehicleId").sort({createdAt:-1});
+           console.log("the new appointment created already",appointments);
+           return res.status(200).json({success:true,newAppointment:appointments});
        }else{
 
-        if (!appointmentDate || !timeslot || !servicetype ) {
-    return res.status(400).json({ success: false, message: "Please provide all required fields" });
-     }
+     
 
      const existingVehicle = await Vehicle.findOne({ VIN });
      if (existingVehicle) {
@@ -181,8 +187,9 @@ export const addAppointmentController=async(req,res)=>{
      }
            const newVehicle=await Vehicle.create({userId,model,year,VIN});
            const newAppointment=await Appointment.create({userId,vehicleId:newVehicle._id,appointmentDate,timeslot,servicetype,fullTimeSlot});
-
-           return res.status(200).json({success:true,newAppointment:newVehicle});
+           const appointments=await Appointment.findOne({userId,_id:newAppointment._id}).populate("vehicleId").sort({createdAt:-1});
+           console.log("the new appointment created",appointments);
+           return res.status(200).json({success:true,newAppointment:appointments});
        }
        
     }
@@ -196,8 +203,18 @@ export const deleteAppointmentController=async(req,res)=>{
     try{
         const userId=req.user._id;
         const appointmentId=req.params.appointmentId;
-        await Appointment.findByIdAndDelete(appointmentId);
+        const getAppointment=await Appointment.findOne({_id:appointmentId,status:"booked"})
+        if(getAppointment){
+ await Appointment.findByIdAndDelete(appointmentId);
         return res.status(200).json({success:true,message:"Appointment deleted successfully"});
+        }
+      const completedAppointment=await Appointment.findOne({_id:appointmentId,status:"completed"})
+      if(completedAppointment){
+        await Appointment.findByIdAndUpdate(appointmentId,{hideFromUser:true});
+        return res.status(200).json({success:true,message:"Appointment deleted successfully"});
+      }
+        return res.status(404).json({success:false,message:"You can not delete it"})
+       
     }
     catch(error){
         console.log("Error in deleteAppointment controller ",error.message);
@@ -207,11 +224,12 @@ export const deleteAppointmentController=async(req,res)=>{
 
 export const updateAppointmentController=async(req,res)=>{
     try{
-        const userId=req.user._id;
-        const appointmentId=req.params.appointmentId;
-        const updateData=req.body;
-        console.log(updateData);
-        const updatedAppointment=await Appointment.findByIdAndUpdate(appointmentId,updateData,{new:true});
+        
+        const vehicleId=req.params.appointmentId;
+        const {val}=req.body;
+        console.log(vehicleId);
+        console.log(val);
+        const updatedAppointment=await Appointment.findByIdAndUpdate(vehicleId,val,{new:true});
         return res.status(200).json({success:true,updatedAppointment});
 
     }
@@ -235,7 +253,7 @@ export const suggestAppointmentController=async(req,res)=>{
        
         // 2. Fetch all booked jobs for that day
         const bookedJobs = await getBookedJobs(selectedDate);
-        console.log("booked jobs are this",bookedJobs);
+       
         // 3. Filter the slots based on bookings and mechanic capacity
         slots = filterSlotsByBookings(slots, bookedJobs);
 

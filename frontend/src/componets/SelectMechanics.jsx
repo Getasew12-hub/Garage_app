@@ -8,7 +8,7 @@ function SelectMechanics({setShow,val,update=false}) {
     const [openDescription,setOpenDescription]=React.useState(null);
     const [selectedMechanic, setSelectedMechanic] = React.useState([]);
     const [seletDate,setSelectData]=React.useState([]);
-
+console.log("selectedMechanic",val?.status);
  useEffect(() => {
     GetMechanics();
  }, []);
@@ -67,7 +67,7 @@ setSelectData([...seletDate,...mechanicsdis]);
 
 
     const getMechanicData = (mechanicID) => {
-    // We use find() because the map index doesn't match the seletDate array index
+   
     return seletDate.find(data => data.id === mechanicID);
 };
 
@@ -87,7 +87,7 @@ response==="true" && setShow(false);
 if(smalLoad) return <div className='flex justify-center items-center h-screen '><Loader  size={45} className='animate-spin'/></div>;
 
 
-
+console.log(val)
   return (
     <div className='fixed inset-0  flex justify-center items-center bg-black/20 z-40 overflow-hidden' onClick={()=>setShow(false)}>
 
@@ -142,7 +142,7 @@ if(smalLoad) return <div className='flex justify-center items-center h-screen '>
           </tbody>
         </table>
 
-        <button onClick={handFormSubmit} disabled={selectedMechanic.length==0 || formLoading}  className={`${selectedMechanic.length==0 ||formLoading ? "bg-blue-400/40 cursor-not-allowed": "bg-blue-400 cursor-pointer"}  p-2 rounded font-semibold  float-end mt-6`}>{formLoading?<Loader size={17} className='animate-spin'/>:"Add service"}</button>
+       {val?.appointment?.status!=="completed" && <button onClick={handFormSubmit} disabled={selectedMechanic.length==0 || formLoading}  className={`${selectedMechanic.length==0 ||formLoading ? "bg-blue-400/40 cursor-not-allowed": "bg-blue-400 cursor-pointer"}  p-2 rounded font-semibold  float-end mt-6`}>{formLoading?<Loader size={17} className='animate-spin'/>:update? "Update service" : "Add service"}</button>}
       </div>}
 
 </div>

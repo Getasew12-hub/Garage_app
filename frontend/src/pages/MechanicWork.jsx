@@ -1,11 +1,14 @@
 import React from 'react'
 import serviceStore from '../store/service'
 import { useEffect } from 'react';
-import { ArrowRightIcon, Loader } from 'lucide-react';
+import { ArrowRightIcon, Loader, X } from 'lucide-react';
+import userStore from '../store/user';
 
 function MechanicWork() {
-  const {GetMechanicsWork,loading,userAppointment}=serviceStore();
+  const {user}=userStore();
+  const {GetMechanicsWork,loading,userAppointment,CompleteMechanicJob}=serviceStore();
   const [showMechanics,setShowMechanics]=React.useState([]);
+  const [dis,setDis]=React.useState("");
   useEffect(() => {
     GetMechanicsWork();
   }, []);
@@ -29,7 +32,7 @@ console.log("mechanic work page rendered ",userAppointment);
                     <th className="text-start p-1 px-2.5 text-nowrap ">Appointment date</th>
                     <th className="text-start p-1 px-2.5 ">Time</th>
                     <th className="text-start p-1 px-2.5"> Status</th>
-                    <th className="text-start p-1 px-2.5"> Disctiption</th>
+                    
                     <th className="text-start p-1 px-2.5"> Mechanics</th>
                     <th className="text-start p-1 px-2.5"> Action</th>
 
@@ -40,22 +43,24 @@ console.log("mechanic work page rendered ",userAppointment);
                     <tr className="border border-gray-500 " key={index}>
                       <td className="p-2.5">{val.vehicle?.model}</td>
                       <td className=" p-2.5">{val.vehicle?.VIN}</td>
-                      <td className=" p-2.5 ">{val?.appointment.servicetype}</td>
-                      <td className=" p-2.5">{val.appointment.appointmentDate?.split("T")[0]}</td>
-                      <td className="p-2.5 text-nowrap">{val.appointment?.timeslot}</td>
+                      <td className=" p-2.5 ">{val?.appointment?.servicetype}</td>
+                      <td className=" p-2.5">{val?.appointment?.appointmentDate?.split("T")[0]}</td>
+                      <td className="p-2.5 text-nowrap">{val?.appointment?.timeslot}</td>
       
-                      <td className={`p-2.5 ${val.status === "in-progress" && "text-yellow-500"} ${val.status === "booked" && "text-blue-500" } ${val?.status === "cancled" && "text-red-500" } ${val.status === "completed" && "text-green-500" }  `}>{val.status}</td>
-                      <td className=" p-2.5 max-w-[200px] ">{val.mechanicId[0]?.dis}</td>
+                      <td className={`p-2.5 ${val?.status === "in-progress" && "text-yellow-500"} ${val?.status === "booked" && "text-blue-500" } ${val?.status === "cancled" && "text-red-500" } ${val?.status === "completed" && "text-green-500" }  `}>{val?.status}</td>
+                     
                       <td className=" p-2.5">
                         <div >
-                         <button className='flex justify-center items-center gap-1 text-sm cursor-pointer' onClick={()=>setShowMechanics(val?.mechanic)}>Mechanics <ArrowRightIcon size={15}/></button>
+                         <button className='flex justify-center items-center gap-1 text-sm cursor-pointer' onClick={()=>{setShowMechanics(val?.mechanic)
+                          setDis(val?.mechanicId[0]?.dis);
+                         }}>Mechanics <ArrowRightIcon size={15}/></button>
                           
                         </div>
                       </td>
                       <td className=" p-2.5">
                         <div >
                           {val.status!=="completed" && <button
-                           onClick={()=>serviceStore.getState().UpdateServiceJobStatus(val._id,"completed")}
+                           onClick={()=>CompleteMechanicJob(val.appointment._id)}
                            className='bg-green-500 text-white py-1 px-3 rounded  '>Mark as Completed</button>}
                         </div>
                       </td>
@@ -65,17 +70,24 @@ console.log("mechanic work page rendered ",userAppointment);
               </table>
             </div>}
 
-          {showMechanics.length>0 && <div className=' fixed inset-0 z-40 bg-black/25 flex justify-center items-start pt-20 ' onClick={()=>setShowMechanics([])}>
+          {showMechanics.length>0 && <div className=' fixed inset-0 z-40 bg-black/25 flex justify-center items-start pt-20 ' onClick={()=>{setShowMechanics([])
+            setDis("")
+          }}>
 
-          <div className='backgroundDiv p-6 rounded' onClick={(e)=>e.stopPropagation()}>
+          <div className='backgroundDiv p-6 rounded relative' onClick={(e)=>e.stopPropagation()}>
               <h2 className='font-bold text-2xl md:text-3xl '>Mechanics</h2>
+              <X size={25} className='absolute top-4 right-4 cursor-pointer' onClick={()=>{setShowMechanics([])
+            setDis("")
+          }}/>
             
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 '>
                 {showMechanics.map((mechanic,index)=>(
-                  <div className='bg-gray-700 p-4' key={index}>
+                  <div className='bg-gray-700 p-4  rounded' key={index}>
                     <h2 className='font-bold text-lg'>{mechanic.name}</h2>
                     
                     <p className='text-sm'>{mechanic.phone}</p>
+
+                    {user._id===mechanic._id && <p className='text-sm mt-2 max-w-[230px]'>{dis}</p>}
                   </div>
                 ))}
               </div>

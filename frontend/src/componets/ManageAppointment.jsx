@@ -43,7 +43,7 @@ function ManageAppointment() {
       
                       <td className=" p-2.5">{val.appointmentDate?.split("T")[0]}</td>
                       <td className=" p-2.5 max-md:hidden">{val?.servicetype}</td>
-                      <td className={`p-2.5 ${val.status === "in-progress" && "text-yellow-500"} ${val.status === "booked" && "text-blue-500" } ${val?.status === "cancled" && "text-red-500" } ${val.status === "completed" && "text-green-500" }  `}>{val.status}</td>
+                      <td className={`p-2.5 ${val.status === "in-progress" && "text-yellow-500"} ${val.status === "booked" && "text-blue-500" } ${val?.status === "canceled" && "text-red-500" } ${val.status === "completed" && "text-green-500" }  `}>{val.status}</td>
                       <td className=" p-2.5">
                         <div >
                           <select name="action"
@@ -51,7 +51,7 @@ function ManageAppointment() {
                            className='border border-gray-500 py-1 px-2 rounded ' defaultValue={val.status}>
                             <option value="booked">booked</option>
                             <option value="in-progress">In-progress</option>
-                            <option value="cancled">Cancled</option>
+                            <option value="canceled">canceled</option>
                           </select>
                           
                         </div>

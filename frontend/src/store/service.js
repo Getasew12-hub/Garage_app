@@ -20,7 +20,7 @@ const serviceStore = create((set, get) => ({
     set({ loading: true });
     try {
    const response=await axios.get("/appointment/getUserAppointments");
-
+     console.log("this is user appointment now and from",response.data.appointments);
         set({ userAppointment: response.data.appointments });
     } catch (error) {
         console.error("Login error:", error);
@@ -71,10 +71,12 @@ const serviceStore = create((set, get) => ({
             const response=await axios.post("/appointment/addAppointment",{vehicleId,appointmentDate,timeslot,servicetype,model,year,VIN,fullTimeSlot});
          
             if(vehicleId==null || vehicleId==undefined || vehicleId=="undefined" || vehicleId=="null"){
-               
-                set({userCars:[response.data.newAppointment,...get().userCars]})
+               console.log("adding new car and appointment",response.data.newAppointment);
+                set({userCars:[response.data.newAppointment,...get().userCars],userAppointment:[{...response?.data?.newAppointment},...get().userAppointment]})
             }else{
-                set({userAppointment:[response.data.newAppointment,...get().userAppointment]})
+               
+               const updateval={...response?.data?.newAppointment,vehicleId:{VIN}}
+                set({userAppointment:[updateval,...get().userAppointment]})
             }
             toast.success("Appointment added successfully");
             return "true"
@@ -88,6 +90,27 @@ const serviceStore = create((set, get) => ({
          }
     
    },
+  UpdateAppointment:async (vehicleId,val) => {
+     if(!vehicleId) return toast.error("unable to update appointment");
+      console.log("updating appointment in store",val);
+     set({formLoading:true});
+     try {
+      const response=await axios.put(`/appointment/updateAppointment/${vehicleId}`,{val});
+      const updatedAppointment=response.data.updatedAppointment;
+      console.log("the updated appointment is this",updatedAppointment);
+      set({userAppointment:get().userAppointment.map((appointment)=> appointment._id===vehicleId ? {...appointment,servicetype:updatedAppointment.servicetype,appointmentDate:updatedAppointment.appointmentDate,timeslot:updatedAppointment.timeslot} : appointment)});
+      toast.success("Appointment updated successfully");
+      return "true";
+     } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error.response?.data?.message || "Update failed");
+      return "false";
+      
+     }finally{
+      set({formLoading:false});
+     }
+   
+  },
 
    TimeSlot:async (date,serviceType) => {
     try {
@@ -107,7 +130,32 @@ const serviceStore = create((set, get) => ({
          console.log(error); 
          toast.error(error.response?.data?.message || " failed to delete vehicle");
       }
+   },
+   CompleteMechanicJob:async(serviceJobId) => {
+      try {
+         const response=await axios.put(`/service-job/updateServiceJob/${serviceJobId}`);
+       
+         set({userAppointment:get().userAppointment.map((job) => job.appointment._id === serviceJobId ? {...job,status:"completed"} : job)});
+         toast.success("Service job marked as completed");
+      } catch (error) {
+         console.log(error); 
+         toast.error(error.response?.data?.message || " failed to update service job");
+      }
+   },
+
+   DeleteAppointment:async (id) => {
+      try {
+         const response=await axios.delete(`/appointment/deleteAppointment/${id}`);
+         set({userAppointment:get().userAppointment.filter((val)=> val._id!==id)});
+         toast.success("Sucessfully Deleted")
+      } catch (error) {
+         
+         toast.error(error.response?.data.message || "Faild to delete")
+         
+      }
+      
    }
+
 
   
 }));

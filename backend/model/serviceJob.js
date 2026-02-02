@@ -18,11 +18,7 @@ const serviceJobSchema=mongoose.Schema({
     }
     }
 ],
-    status:{
-        type:String,
-        default:"in-progress",
-        enum:["in-progress","completed","cancelled"],
-    },
+
    
 },{timestamps:true
 });

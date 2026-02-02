@@ -204,7 +204,8 @@ UpdateSeriveStatus:async (id,val) => {
         const response=await axios.put(`/admin/updateServiceStatus/${id}`,{status:val});
              set({AppointmetData:get().AppointmetData.map((appointment)=>{
             if(appointment._id===id){
-                return {...appointment,status:val};
+               const updateval={...appointment.appointment,status:val}
+                return {...appointment,appointment:updateval};
             }
             return appointment;
         })});

@@ -7,7 +7,7 @@ function Footer() {
     const location=useLocation()
     const adminPath=location.pathname.startsWith("/admin")
   return (
-    <div className={`${adminPath && "hidden"} bg-gray-900 mt-60 py-14`}>
+    <div className={`${adminPath && "hidden"} bg-gray-900 mt-60 py-14 overflow-x-hidden`}>
 
         <div className='max-w-6xl mx-auto px-4 space-y-20'>
 
@@ -19,11 +19,11 @@ function Footer() {
             </div>
             <div className='flex gap-4 max-lg:flex-col md:justify-center md:items-center'>
                 <Mail />
-                <p className='tracking-wider'> <span className='font-semibold'>Email us :</span>contact@autorex.com</p>
+                <p className='tracking-wider wrap-break-word '> <span className='font-semibold '>Email us: </span>family@gamil.com</p>
             </div>
             <div className='flex gap-4 max-lg:flex-col md:justify-center md:items-center'>
                 <Phone/>
-                <p className='tracking-wider'> <span className='font-semibold'>Call us on :</span>+ 1800 456 7890</p>
+                <p className='tracking-wider'> <span className='font-semibold'>Call us on: </span>+2519 456 78900</p>
             </div>
         </div>
 

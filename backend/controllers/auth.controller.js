@@ -100,6 +100,7 @@ export const logoutController=async(req,res)=>{
 
 
 export const checkAuthController=async(req,res)=>{
+    
     try {
         const user=req.user;
         return res.status(200).json({sucess:true,user});

@@ -32,6 +32,10 @@ const appointmentSchema=mongoose.Schema({
         default:"booked",
         enum:["booked","in-progress","cancelled","completed"],
     },
+    hideFromUser:{
+        type:Boolean,
+        default:false,
+    }
 },{timestamps:true
 });
 const Appointment=mongoose.model("Appointment",appointmentSchema);

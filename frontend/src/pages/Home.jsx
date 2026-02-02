@@ -11,10 +11,10 @@ function Home() {
  
   return (
     <div>
-        <Header/>
+        {/* <Header/> */}
         <div className='max-w-6xl mx-auto px-4 '>
-          <Discription/>
-        <OurServices/>
+          {/* <Discription/> */}
+        {/* <OurServices/> */}
         
         </div>
 
@@ -35,8 +35,8 @@ Customer Satisfaction !!</h2>
         </div>
 
 <div className='max-w-6xl mx-auto px-4 '>
- <WhyChooseUs/>
- <AppointmentSuggesiton/>
+ {/* <WhyChooseUs/> */}
+ {/* <AppointmentSuggesiton/> */}
 </div>
        
 

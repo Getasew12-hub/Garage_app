@@ -1,3 +1,4 @@
+import Appointment from "../model/appointment.js";
 import ServiceJob from "../model/serviceJob.js";
 
 
@@ -13,9 +14,7 @@ export const getMechanicServiceJobsController=async(req,res)=>{
                     "mechanicId.id":mechanicId
                 }
             },
-            {
-                 $sort:{createdAt:-1}
-            },
+           
             {
                 $lookup:{
                     from:"appointments",
@@ -23,6 +22,9 @@ export const getMechanicServiceJobsController=async(req,res)=>{
                     foreignField:"_id",
                     as:"appointment"
                 }
+            },
+             {
+                 $sort:{"appointment.status":-1}
             },
             {
                 $unwind:"$appointment"
@@ -58,6 +60,7 @@ export const getMechanicServiceJobsController=async(req,res)=>{
              "appointment.appointmentDate":1,
                 "appointment.timeslot":1,
                 "appointment.servicetype":1,
+               "status": "$appointment.status",
                 "vehicle._id":1,
                 "vehicle.model":1,
                 "vehicle.year":1,
@@ -92,9 +95,11 @@ export const getMechanicServiceJobsController=async(req,res)=>{
 
 export const updateServiceJobController=async (req,res) => {
     try {
-        const serviceJobId=req.params.serviceJobId;
-        const updateData=req.body;
-        const updatedServiceJob=await ServiceJob.findByIdAndUpdate(serviceJobId,updateData,{new:true});
+        console.log("this is work")
+        const appointmetId=req.params.serviceJobId;
+        
+        const updatedServiceJob=await Appointment.findByIdAndUpdate(appointmetId,{status:"completed"},{new:true});
+    
         return res.status(200).json({success:true,updatedServiceJob});
         
     } catch (error) {
@@ -103,6 +108,8 @@ export const updateServiceJobController=async (req,res) => {
     }
     
 }
+
+
 
 
 
