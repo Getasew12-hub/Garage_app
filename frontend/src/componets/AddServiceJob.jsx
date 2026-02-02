@@ -26,7 +26,7 @@ function AddServiceJob() {
   function searchResult(result) {
     setServices(result);
   }
-
+console.log(services);
   return (
     <div>
       <div className="flex justify-between">
@@ -38,7 +38,7 @@ function AddServiceJob() {
           <table className="   w-full text-sm  md:text-md  ">
             <thead className="sticky top-0 bg-gray-700 border border-gray-500 shadow-sm z-10   ">
               <tr>
-                <th className="text-start p-1 px-2.5 ">Owner name</th>
+                <th className="text-start p-1 px-2.5 ">Service Type</th>
                 <th className="text-start p-1 px-2.5">Car model</th>
                 <th className="text-start p-1 px-2.5">VIN</th>
 
@@ -49,7 +49,7 @@ function AddServiceJob() {
             <tbody>
               {services.map((val, index) => (
                 <tr className="border border-gray-500 " key={index}>
-                  <td className="p-2.5">{val?.user?.name}</td>
+                  <td className="p-2.5">{val?.servicetype}</td>
                   <td className="p-2.5">{val?.vehicle?.model}</td>
                   <td className=" p-2.5">{val?.vehicle?.VIN}</td>
 
